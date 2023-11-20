@@ -29,16 +29,16 @@ const HomeScreen = () => {
 
   // Lista de partidas (pode ser obtida de uma API, banco de dados, etc.)
   const jogosIniciais = [
-    { time1: 'Botafogo', time2: 'Flamengo' },
-    { time1: 'São Paulo', time2: 'Palmeiras' },
-    { time1: 'América Mineiro', time2: 'Bahia' },
-    { time1: 'Coritiba', time2: 'Internacional' },
-    { time1: 'Grêmio', time2: 'Santos' },
-    { time1: 'Vasco da Gama', time2: 'Red Bull Bragantino' },
-    { time1: 'Goiás Esporte Clube-GO', time2: 'Fortaleza' },
-    { time1: 'Fluminense', time2: 'Cuiabá' },
-    { time1: 'Corinthians', time2: 'Atlético Mineiro' },
-    { time1: 'Athletico Paranaense', time2: 'Cruzeiro' },
+    { time1: 'Botafogo', time2: 'Flamengo', horario: '15:00' },
+    { time1: 'São Paulo', time2: 'Palmeiras', horario: '16:30' },
+    { time1: 'América Mineiro', time2: 'Bahia', horario: '18:00' },
+    { time1: 'Coritiba', time2: 'Internacional', horario: '19:45' },
+    { time1: 'Grêmio', time2: 'Santos', horario: '20:30' },
+    { time1: 'Vasco da Gama', time2: 'Red Bull Bragantino', horario: '21:15' },
+    { time1: 'Goiás Esporte Clube-GO', time2: 'Fortaleza', horario: '22:00' },
+    { time1: 'Fluminense', time2: 'Cuiabá', horario: '14:00' },
+    { time1: 'Corinthians', time2: 'Atlético Mineiro', horario: '15:30' },
+    { time1: 'Athletico Paranaense', time2: 'Cruzeiro', horario: '17:00' },
     // Adicione mais partidas conforme necessário
   ];
 
@@ -92,6 +92,8 @@ const HomeScreen = () => {
       case 'Cruzeiro':
         return require('./img/Cruzeiro.png');
       default:
+        // Se o nome do time não corresponder a nenhum dos casos, retorne uma imagem padrão ou lide com isso conforme necessário
+        
     }
   };
 
@@ -142,6 +144,9 @@ const HomeScreen = () => {
               <Text style={styles.vsText}>VS</Text>
               <Image source={getImagemTime(jogo.time2)} style={styles.image} />
               <Text style={styles.imageText}>{jogo.time2}</Text>
+
+              <Text style={styles.horarioText}>{`Horário: ${jogo.horario}`}</Text>
+
               <TouchableOpacity
                 style={styles.compraButton}
                 onPress={handleComprarIngresso}
@@ -234,6 +239,11 @@ const styles = StyleSheet.create({
   },
   vsText: {
     fontSize: 18,
+    color: '#000',
+    marginVertical: 5,
+  },
+  horarioText: {
+    fontSize: 14,
     color: '#000',
     marginVertical: 5,
   },
