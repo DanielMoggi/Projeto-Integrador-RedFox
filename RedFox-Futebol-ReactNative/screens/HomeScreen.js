@@ -1,10 +1,21 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import LupaIcon from './img/pngwing.com.png';
 import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [searchText, setSearchText] = useState('');
+  const [jogosDaSemana, setJogosDaSemana] = useState([]);
 
   const handleComprarIngresso = () => {
     navigation.navigate('Ingresso');
@@ -16,124 +27,132 @@ const HomeScreen = () => {
 
   const screenWidth = Dimensions.get('window').width;
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.menu}>
-        <Text style={styles.menuItem}>Home</Text>
+  // Lista de partidas (pode ser obtida de uma API, banco de dados, etc.)
+  const jogosIniciais = [
+    { time1: 'Botafogo', time2: 'Flamengo' },
+    { time1: 'São Paulo', time2: 'Palmeiras' },
+    { time1: 'América Mineiro', time2: 'Bahia' },
+    { time1: 'Coritiba', time2: 'Internacional' },
+    { time1: 'Grêmio', time2: 'Santos' },
+    { time1: 'Vasco da Gama', time2: 'Red Bull Bragantino' },
+    { time1: 'Goiás Esporte Clube-GO', time2: 'Fortaleza' },
+    { time1: 'Fluminense', time2: 'Cuiabá' },
+    { time1: 'Corinthians', time2: 'Atlético Mineiro' },
+    { time1: 'Athletico Paranaense', time2: 'Cruzeiro' },
+    // Adicione mais partidas conforme necessário
+  ];
 
+  useEffect(() => {
+    // Embaralha os jogos aleatoriamente
+    const shuffledJogos = [...jogosIniciais].sort(() => Math.random() - 0.5);
+    setJogosDaSemana(shuffledJogos);
+  }, []);
+
+  // Mapeia o nome do time para o caminho da imagem
+  const getImagemTime = (nomeTime) => {
+    switch (nomeTime) {
+      case 'Botafogo':
+        return require('./img/Botafogo.png');
+      case 'Flamengo':
+        return require('./img/Flamengo.png');
+      case 'São Paulo':
+        return require('./img/São Paulo.png');
+      case 'Palmeiras':
+        return require('./img/Palmeiras.png');
+      case 'América Mineiro':
+        return require('./img/América Mineiro.png');
+      case 'Bahia':
+        return require('./img/Bahia.png');
+      case 'Coritiba':
+        return require('./img/Coritiba.png');
+      case 'Internacional':
+        return require('./img/internacional.png');
+      case 'Grêmio':
+        return require('./img/Grêmio.png');
+      case 'Santos':
+        return require('./img/Santos.png');
+      case 'Vasco da Gama':
+        return require('./img/Vasco da Gama.png');
+      case 'Red Bull Bragantino':
+        return require('./img/Red Bull Bragantino.png');
+      case 'Goiás Esporte Clube-GO':
+        return require('./img/Goiás Esporte Clube-GO.png');
+      case 'Fortaleza':
+        return require('./img/Fortaleza.png');
+      case 'Fluminense':
+        return require('./img/Fluminense.png');
+      case 'Cuiabá':
+        return require('./img/Cuiabá.png');
+      case 'Corinthians':
+        return require('./img/Corinthians.png');
+      case 'Atlético Mineiro':
+        return require('./img/Atlético Mineiro.png');
+      case 'Athletico Paranaense':
+        return require('./img/Athletico Paranaense.png');
+      case 'Cruzeiro':
+        return require('./img/Cruzeiro.png');
+      default:
+    }
+  };
+
+  // Filtra as partidas com base no texto de pesquisa
+  const jogosFiltrados = jogosDaSemana.filter(
+    (jogo) =>
+      jogo.time1.toLowerCase().includes(searchText.toLowerCase()) ||
+      jogo.time2.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return (
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.menu}>
+        <Text style={styles.menuItem}>logo</Text>
         <View style={styles.searchBar}>
           <Image source={LupaIcon} style={styles.lupaIcon} />
-          <TextInput placeholder="Search" style={styles.searchInput} />
+          <TextInput
+            placeholder="Buscar"
+            style={styles.searchInput}
+            value={searchText}
+            onChangeText={(text) => setSearchText(text)}
+          />
         </View>
         <View style={styles.handleHistorico}>
           <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleHistorico}>
-            <Image style={styles.roundedImage} source={require('./img/pngfind.com-bite-mark-png-631239.png')} />
+            style={styles.roundedButton}
+            onPress={handleHistorico}
+          >
+            <Image
+              style={styles.roundedImage}
+              source={require('./img/pngfind.com-bite-mark-png-631239.png')}
+            />
           </TouchableOpacity>
         </View>
       </View>
 
       <View style={styles.content}>
         <Text style={styles.contentText}>Jogos da semana</Text>
+        {jogosFiltrados.map((jogo, index) => (
+          <View key={index} style={styles.imageRow}>
+            <View style={styles.column}>
+              <Image source={getImagemTime(jogo.time1)} style={styles.image} />
+              <Text style={styles.imageText}>{jogo.time1}</Text>
 
-        <View style={styles.imageRow}>
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
+              <Text style={styles.vsText}>VS</Text>
+              <Image source={getImagemTime(jogo.time2)} style={styles.image} />
+              <Text style={styles.imageText}>{jogo.time2}</Text>
+              <TouchableOpacity
+                style={styles.compraButton}
+                onPress={handleComprarIngresso}
+              >
+                <Text style={styles.compraButtonText}>
+                  Comprar ingresso
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}
-            >
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.column}>
-            <Image source={require('./img/Botafogo.png')} style={styles.image} />
-            <Text style={styles.vsText}>VS</Text>
-            <Image source={require('./img/Flamengo.png')} style={styles.image} />
-            <TouchableOpacity
-              style={styles.compraButton}
-              onPress={handleComprarIngresso}>
-              <Text style={styles.compraButtonText}>Comprar ingresso</Text>
-            </TouchableOpacity>
-          </View>
-
-        </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
   menu: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
     padding: 20,
   },
   menuItem: {
@@ -191,19 +210,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    padding: 10,
+    padding: 5,
   },
   column: {
-    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center', // Alinha o texto com as imagens
     padding: 10,
-    width: '48%',
+    width: '100%',
     marginBottom: 20,
-    backgroundColor: '#fff', // Add a background color for spacing
+    backgroundColor: 'transparent',
   },
   image: {
     width: 100,
     height: 100,
     marginBottom: 10,
+    backgroundColor: 'transparent',
+  },
+  imageText: {
+    fontSize: 16,
+    color: '#000',
+    textAlign: 'center',
   },
   vsText: {
     fontSize: 18,
@@ -215,16 +242,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: 10,
+    marginTop: 5,
   },
   compraButtonText: {
     color: '#fff',
     fontSize: 16,
     textAlign: 'center',
   },
+  roundedButton: {
+    backgroundColor: 'transparent',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
+  roundedImage: {
+    width: 30,
+    height: 30,
+  },
   handleHistorico: {
-    padding: 10
-  }
+    padding: 10,
+  },
 });
 
 export default HomeScreen;

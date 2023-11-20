@@ -19,7 +19,7 @@ const IngressoScreen = () => {
     setTicketQuantity(newQuantity);
 
     const newTotal = Object.keys(newQuantity).reduce(
-      (acc, ticketType) => acc + selectedPrices[ticketType] * newQuantity[ticketType],
+      (acc, ticketType) => acc + selectedPrices[ticketType].price * newQuantity[ticketType],
       0
     );
     setTotalPrice(newTotal);
@@ -32,7 +32,7 @@ const IngressoScreen = () => {
       setTicketQuantity(newQuantity);
 
       const newTotal = Object.keys(newQuantity).reduce(
-        (acc, ticketType) => acc + selectedPrices[ticketType] * newQuantity[ticketType],
+        (acc, ticketType) => acc + selectedPrices[ticketType].price * newQuantity[ticketType],
         0
       );
       setTotalPrice(newTotal);
@@ -46,9 +46,18 @@ const IngressoScreen = () => {
   };
 
   const selectedPrices = {
-    padrao: 50,
-    vip: 100,
-    premium: 150,
+    padrao: {
+      price: 50,
+      description: 'Ingresso Padrão - Assentos comuns',
+    },
+    vip: {
+      price: 100,
+      description: 'Ingresso VIP - Assentos privilegiados',
+    },
+    premium: {
+      price: 150,
+      description: 'Ingresso Premium - Melhores assentos e benefícios extras',
+    },
   };
 
   return (
@@ -60,15 +69,16 @@ const IngressoScreen = () => {
           <View style={styles.ticketOptionContainer} key={type}>
             <TouchableOpacity
               style={styles.ticketOption}
-              onPress={() => handleSelectTicket(selectedPrices[type], type)}
+              onPress={() => handleSelectTicket(selectedPrices[type].price, type)}
             >
               <Text style={styles.optionText}>Ingresso {type}</Text>
               <Text
                 style={styles.optionPrice}
-                onPress={() => handleSelectTicket(selectedPrices[type], type)}
+                onPress={() => handleSelectTicket(selectedPrices[type].price, type)}
               >
-                R$ {selectedPrices[type]}
+                R$ {selectedPrices[type].price}
               </Text>
+              <Text style={styles.optionDescription}>{selectedPrices[type].description}</Text>
             </TouchableOpacity>
             <View style={styles.quantityContainer}>
               <TouchableOpacity
@@ -80,7 +90,7 @@ const IngressoScreen = () => {
               <Text style={styles.quantityText}>{ticketQuantity[type]}</Text>
               <TouchableOpacity
                 style={styles.quantityButton}
-                onPress={() => handleSelectTicket(selectedPrices[type], type)}
+                onPress={() => handleSelectTicket(selectedPrices[type].price, type)}
               >
                 <Text style={styles.quantityButtonText}>+</Text>
               </TouchableOpacity>
@@ -151,6 +161,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#800000',
   },
+  optionDescription: {
+    fontSize: 14,
+    color: '#888',
+  },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -176,18 +190,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 20,
     color: '#333',
-  },
-  addTotalButton: {
-    backgroundColor: '#007BFF',
-    borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  addTotalButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   confirmPurchaseButton: {
     backgroundColor: '#28a745',
