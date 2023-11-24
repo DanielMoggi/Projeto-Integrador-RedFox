@@ -5,7 +5,9 @@ description = ""
 authors = [
     {name = "Daniel", email = "danielmoggi2019@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "django>=4.2.7",
+]
 requires-python = ">=3.12"
 readme = "README.md"
 license = {text = "MIT"}
